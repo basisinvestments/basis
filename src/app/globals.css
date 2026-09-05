@@ -1,0 +1,336 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   basis design system — see docs/design-system.md
+   Pure black ground, one interface accent, three semantic data colours, square
+   corners everywhere except a single chip. Committed single-theme: this is an
+   instrument read in the dark, so every colour is painted explicitly.
+   ========================================================================== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { background: #000; scroll-behavior: smooth; }
+/* The instrument bar is fixed at 56px, so an anchored section would otherwise land
+   underneath it. Every nav target is addressed by id, so scoping to [id] covers all
+   of them without having to remember a class on each one. */
+[id] { scroll-margin-top: 72px; }
+body { background: #000; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+:root {
+  /* data semantics — these mean something, never decorative */
+  --ref:  #FFB454;   /* the real world: exchange price x multiplier */
+  --pool: #AFDDFF;   /* on-chain */
+  --hot:  #FF6B4A;   /* the gap */
+  /* flag scale */
+  --mint: #5BD6A0;
+  --warn: #FFC773;
+  --grey: #6E7488;
+  --viol: #B79CFF;
+}
+
+/* The page knows what time it is. As the reference loses authority the amber
+   loses saturation, and when the market shuts it goes hatched and hollow. */
+:root[data-session='pre'],
+:root[data-session='post'],
+:root[data-session='overnight'] { --ref: #D9A24A; }
+:root[data-session='closed']    { --ref: #B8925A; }
+
+:root[data-session='closed'] .refmark {
+  background: repeating-linear-gradient(45deg, var(--ref) 0 2px, transparent 2px 5px) !important;
+}
+:root[data-session='closed'] .dot {
+  background: transparent;
+  border: 1px solid var(--ref);
+  box-shadow: none;
+}
+
+::selection { background: #AFDDFF; color: #000; }
+:focus-visible { outline: 1px solid #AFDDFF; outline-offset: 3px; }
+
+/* ------------------------------------------------------------- type roles */
+
+.font-graphik { font-family: var(--font-display), Archivo, 'Graphik LCG', sans-serif; }
+.font-manrope { font-family: var(--font-ui), Manrope, sans-serif; }
+.font-data    { font-family: var(--font-data), 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+                font-variant-numeric: tabular-nums; }
+
+/* The reading: the only element allowed above H1 size. An instrument makes the
+   measurement the biggest thing on screen, not the headline. */
+.reading {
+  font-family: var(--font-data), 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  font-weight: 500;
+}
+
+.lab {
+  font-family: var(--font-data), 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+.lab-on { color: #fff; }
+
+.c-ref  { color: var(--ref); }
+.c-pool { color: var(--pool); }
+.c-hot  { color: var(--hot); }
+.c-mint { color: var(--mint); }
+
+/* ------------------------------------------------------------- surfaces */
+
+/* There are no filled cards. A surface is its border and at most a 1.5% wash. */
+.spec { border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.015); }
+.rule { border-top: 1px solid rgba(255, 255, 255, 0.1); }
+
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ref); box-shadow: 0 0 9px var(--ref); }
+
+/* Outline only — a filled pill would compete with the CTA, the one solid accent
+   block allowed on any screen. */
+.flag {
+  font-family: var(--font-data), 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  padding: 3px 9px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.f-TIGHT  { color: var(--mint); }
+.f-WATCH  { color: var(--warn); }
+.f-WIDE   { color: var(--hot); }
+.f-DARK   { color: var(--grey); }
+.f-ACTION { color: var(--viol); }
+
+.btn {
+  background: #AFDDFF; color: #000;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 20px;
+  font-family: var(--font-ui), Manrope, sans-serif;
+  font-size: 13px; line-height: 15.6px;
+  text-transform: uppercase; letter-spacing: 0.025em;
+  transition: background 0.2s;
+}
+.btn:hover { background: #c8e8ff; }
+.btn-ghost { background: none; color: #fff; border: 1px solid rgba(255, 255, 255, 0.25); }
+.btn-ghost:hover { background: none; border-color: #fff; }
+
+.verify {
+  font-family: var(--font-data), 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: #AFDDFF; cursor: pointer; background: none; border: 0; padding: 0;
+}
+.verify:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* The verify drawer: a plain panel, never a modal. */
+.drawer {
+  font-family: var(--font-data), 'IBM Plex Mono', monospace;
+  font-size: 11.5px; line-height: 1.75;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(175, 221, 255, 0.04);
+  border: 1px solid rgba(175, 221, 255, 0.16);
+  padding: 14px 16px;
+  white-space: pre; overflow-x: auto;
+}
+.drawer .k { color: #AFDDFF; }
+.drawer .c { color: rgba(255, 255, 255, 0.35); }
+.drawer .n { color: var(--ref); }
+
+/* Wraps rather than overflowing: six tokens in a row is 351px, wider than a
+   375px viewport minus the gutter. */
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid rgba(255, 255, 255, 0.2); }
+.seg button {
+  font-family: var(--font-ui), Manrope, sans-serif;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 7px 14px;
+  color: rgba(255, 255, 255, 0.45);
+  background: none; border: 0; border-left: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+.seg button:first-child { border-left: 0; }
+.seg button:hover { color: #fff; }
+.seg button[aria-pressed='true'] { background: #AFDDFF; color: #000; }
+
+/* --------------------------------------------------------- data displays */
+
+.tb th {
+  font-family: var(--font-data), 'IBM Plex Mono', monospace;
+  font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45); font-weight: 500;
+  padding: 9px 14px; text-align: right; white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer; user-select: none;
+}
+.tb th:first-child { text-align: left; }
+.tb th:hover { color: #fff; }
+.tb th[data-active='true'] { color: #AFDDFF; }
+.tb td {
+  font-family: var(--font-data), 'IBM Plex Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px; padding: 10px 14px; text-align: right; white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.tb td:first-child { text-align: left; }
+.tb tr.r { cursor: pointer; }
+/* Hover shifts background, never a border — a border change moves the layout by a pixel. */
+.tb tr.r:hover { background: rgba(175, 221, 255, 0.05); }
+.tb tr.d td { padding: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.35); }
+
+.rung {
+  display: grid; grid-template-columns: 80px 1fr 170px 76px; gap: 12px; align-items: center;
+  padding: 5px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: var(--font-data), 'IBM Plex Mono', monospace;
+  font-size: 12px; font-variant-numeric: tabular-nums; color: rgba(255, 255, 255, 0.7);
+}
+.rung:last-child { border-bottom: 0; }
+.rung .bar { position: relative; height: 8px; background: rgba(255, 255, 255, 0.07); }
+.rung .bar i { position: absolute; top: -3px; width: 2px; height: 14px; background: var(--pool); }
+.rung.best  { color: var(--mint); }
+.rung.worst { color: var(--hot); }
+.rung.refrow { color: var(--ref); }
+.rung.refrow .bar { background: transparent; }
+.rung.refrow .bar i { background: var(--ref); height: 18px; top: -5px; }
+
+/* 80 + 170 + 76 of fixed columns plus gaps exceeds a phone viewport. Below sm the
+   venue label is dropped — price, position and depth are the load-bearing parts. */
+@media (max-width: 640px) {
+  .rung { grid-template-columns: 70px 1fr 62px; gap: 8px; font-size: 11.5px; }
+  .rung .ven { display: none; }
+  /* Same trade on the desk table: five columns force a sideways scroll that hides
+     the gap and the flag — the two a glance is for. The pool price is recoverable
+     from the reference and the gap, so it is the one that goes. */
+  .tb .pp { display: none; }
+  .tb th, .tb td { padding-left: 9px; padding-right: 9px; }
+}
+
+/* Documentation tables carry prose, not figures. `.tb` is built for tabular numerals
+   right-aligned and never wrapping; a docs table needs the opposite on both counts. */
+.docs-body .tb th,
+.docs-body .tb td {
+  white-space: normal;
+  text-align: left;
+  vertical-align: top;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 21px;
+}
+.docs-body .tb th { font-family: var(--font-data), 'IBM Plex Mono', monospace; font-size: 9.5px; }
+.docs-body .tb code { white-space: nowrap; }
+.docs-body .drawer { white-space: pre-wrap; word-break: break-word; }
+
+/* session strip */
+.dayrow { position: relative; display: flex; height: 22px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.sg-reg  { background: rgba(175, 221, 255, 0.38); }
+.sg-edge { background: rgba(175, 221, 255, 0.14); }
+.sg-ov   { background: rgba(175, 221, 255, 0.06); }
+.sg-cl   { background: repeating-linear-gradient(45deg, transparent 0 4px, rgba(255,255,255,0.12) 4px 5px); }
+.now { position: absolute; top: -6px; bottom: -6px; width: 2px; background: var(--hot); box-shadow: 0 0 10px var(--hot); }
+
+.token-strip button {
+  font-family: var(--font-data), 'IBM Plex Mono', monospace;
+  font-size: 12px; letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.45);
+  background: none; border: 0; border-bottom: 1px solid transparent;
+  padding: 8px 0; cursor: pointer;
+}
+.token-strip button:hover { color: #fff; }
+.token-strip button[aria-pressed='true'] { color: #fff; border-bottom-color: #AFDDFF; }
+
+/* Hovering a source in the node diagram dims every figure not fed by it. */
+html.hi-ref  [data-src]:not([data-src='ref']),
+html.hi-pool [data-src]:not([data-src='pool']),
+html.hi-orc  [data-src]:not([data-src='orc']) { opacity: 0.22; transition: opacity 0.25s; }
+html.hi-ref  [data-src='ref'],
+html.hi-pool [data-src='pool'],
+html.hi-orc  [data-src='orc'] { text-shadow: 0 0 16px currentColor; transition: text-shadow 0.25s; }
+
+/* ---------------------------------------------------------------- motion */
+/* Two curves. Expo-out for entrances, expo-in-out for interaction. Nothing
+   loops, nothing bounces, everything enters once and holds. */
+
+@keyframes fadeUp      { from { opacity: 0; transform: translateY(18px); }  to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn      { from { opacity: 0; }                                to { opacity: 1; } }
+@keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInRight{ from { opacity: 0; transform: translateX(20px); }  to { opacity: 1; transform: translateX(0); } }
+@keyframes scaleIn     { from { opacity: 0; transform: scale(0.85); }       to { opacity: 1; transform: scale(1); } }
+@keyframes gridReveal  { from { opacity: 0; transform: scaleY(0); }         to { opacity: 1; transform: scaleY(1); } }
+@keyframes gridRevealH { from { opacity: 0; transform: scaleX(0); }         to { opacity: 1; transform: scaleX(1); } }
+@keyframes drawLine    { from { opacity: 0; stroke-dashoffset: 100; }       to { opacity: 1; stroke-dashoffset: 0; } }
+
+.a-up { opacity: 0; animation: fadeUp       0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.a-in { opacity: 0; animation: fadeIn       0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.a-sl { opacity: 0; animation: slideInLeft  0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.a-sr { opacity: 0; animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.a-sc { opacity: 0; animation: scaleIn      0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.a-gv { opacity: 0; transform-origin: top;  animation: gridReveal  1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.a-gh { opacity: 0; transform-origin: left; animation: gridRevealH 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* Below the fold: the section header only, once. The full choreography is a hero device. */
+.rv { opacity: 0; transform: translateY(18px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+.rv.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  .a-up, .a-in, .a-sl, .a-sr, .a-sc, .a-gv, .a-gh { opacity: 1; }
+  .rv { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   Motion that carries information
+   The colours mean something and are never decorative. Motion obeys the same
+   rule: it is the data moving, or it is something only this product can do.
+   ========================================================================== */
+
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* entrances */
+  --ease-io:  cubic-bezier(0.76, 0, 0.24, 1);  /* interaction — documented for weeks, applied here */
+}
+
+/* The page breathes with the market. Live: the pip has a pulse. Thin sessions beat
+   slower — the reference is there but the market makers are not. Closed: it holds. */
+@keyframes heartbeat {
+  0%, 100% { box-shadow: 0 0 9px var(--ref); opacity: 1; }
+  50%      { box-shadow: 0 0 2px var(--ref); opacity: 0.5; }
+}
+.dot { animation: heartbeat 2.4s var(--ease-io) infinite; }
+:root[data-session='pre'] .dot,
+:root[data-session='post'] .dot,
+:root[data-session='overnight'] .dot { animation-duration: 4.2s; }
+:root[data-session='closed'] .dot { animation: none; }
+
+/* A figure that just changed blooms in its own colour and settles. Never on mount. */
+@keyframes tick-bloom {
+  from { text-shadow: 0 0 18px currentColor; background: rgba(255, 255, 255, 0.09); }
+  to   { text-shadow: none; background: transparent; }
+}
+.tick { display: inline; border-radius: 2px; padding: 0 2px; margin: 0 -2px; }
+.tick-ref, .tick-pool, .tick-hot { animation: tick-bloom 0.7s var(--ease-out) forwards; }
+
+/* Route change: content arrives, the bar stays put. */
+@keyframes routeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.route-in { animation: routeIn 0.45s var(--ease-out); }
+
+/* The sources diagram assembles itself once, when it comes into view: connectors
+   draw first, labels arrive, then the squares — the rule in the design system that
+   labels and connectors precede the things they point to. */
+.diagram .draw   { stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0; }
+.diagram .node   { opacity: 0; }
+.diagram .nlabel { opacity: 0; }
+.diagram.on .draw   { animation: drawLine 0.9s var(--ease-out) forwards; }
+.diagram.on .nlabel { animation: fadeIn   0.8s var(--ease-out) forwards; }
+.diagram.on .node   { animation: scaleIn  0.7s var(--ease-out) forwards; }
+
+/* The interactive curve on every hover, toggle and row — later rules at equal
+   specificity win, so these override the earlier bare `transition` declarations. */
+.btn, .btn-ghost { transition: background 0.2s var(--ease-io), border-color 0.2s var(--ease-io), color 0.2s var(--ease-io); }
+.verify, .seg button, .tb th, .tb tr.r, .token-strip button, .flag, .lab {
+  transition: color 0.2s var(--ease-io), background 0.2s var(--ease-io), border-color 0.2s var(--ease-io), opacity 0.2s var(--ease-io);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot { animation: none; }
+  .diagram .draw, .diagram .node, .diagram .nlabel { opacity: 1; stroke-dashoffset: 0; }
+  .route-in { animation: none; }
+}

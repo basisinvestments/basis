@@ -1,0 +1,27 @@
+Copyright (c) 2026 basis. All rights reserved.
+
+The source of this project is published so that the measurement it performs can be
+audited by anyone, without trusting the people who publish it. That is the whole
+claim the product makes, and it would be hollow if the code were closed.
+
+Publication is not a licence. No permission is granted to copy, modify, merge,
+publish, distribute, sublicense, or sell this software or substantial portions of
+it, or to create derivative works from it.
+
+You may read it. You may quote it in commentary, review, or reporting. You may run
+it locally to verify a figure this project has published. Anything beyond that
+requires written permission.
+
+Third-party assets carry their own terms and are not covered by the above. They are
+listed in LICENSING.md, which names each one, its source, and its status.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Nothing here is financial advice. The figures this project publishes are measurements
+of public market data, carry the timestamp at which they were read, and are stale on
+arrival. See docs/brand-compliance.md.

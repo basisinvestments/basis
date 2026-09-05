@@ -1,0 +1,36 @@
+name: check
+
+# Every push and pull request runs the same gates the repo runs locally. `npm run
+# check` is types + lint + the copy gate, so a rule cannot pass on a laptop and fail
+# here, or the reverse.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Types, lint, copy gate
+        run: npm run check
+
+      - name: Logic tests
+        run: npm test
+
+      - name: Production build
+        # Forced offline so the build never depends on a third-party API being up.
+        # This also exercises the degradation path: every row falls back to the
+        # stored capture and renders DARK, which is behaviour worth proving anyway.
+        env:
+          BASIS_OFFLINE: '1'
+        run: npm run build

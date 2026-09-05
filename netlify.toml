@@ -1,0 +1,40 @@
+# Netlify build configuration.
+#
+# The Next.js runtime is declared explicitly rather than left to auto-detection, so
+# a change in Netlify's detection heuristics cannot silently alter how this deploys.
+# It turns the App Router build into Netlify Functions: the API routes under
+# /api/v1 become serverless handlers, and the ISR pages honour their revalidate.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Matches the local toolchain and .nvmrc. Next 15 needs 18.18+; 22 is current LTS.
+  NODE_VERSION = "22"
+  # Secrets scanning would otherwise flag the public, non-secret BASIS_* values that
+  # legitimately appear in the built output. Real secrets stay out of the repo and
+  # out of the build log — see the omit list below.
+  SECRETS_SCAN_OMIT_KEYS = "BASIS_FEATURED,BASIS_REVALIDATE_SECONDS,BASIS_OFFLINE,INTERPRETER_MODEL"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# basis never asks for a credential, never takes a wallet connection and never embeds
+# anyone. These headers say so at the transport layer rather than only in the copy.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+
+# The API is meant to be called by anyone — that is the point of publishing it. The
+# page and the API read the same assembler, so a third party can check our numbers.
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"

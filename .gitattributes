@@ -1,0 +1,14 @@
+# Normalise line endings in the repository to LF.
+#
+# Not cosmetic. `src/lib/docs.ts` reads the markdown in `docs/` and parses headings out
+# of it with regexes; a CRLF checkout broke that silently on Windows while the identical
+# code worked on the Linux build server. The reader normalises defensively, and this
+# keeps the stored form consistent so the two can never disagree again.
+* text=auto eol=lf
+
+# Binary — never touch.
+*.mp4 binary
+*.png binary
+*.jpg binary
+*.woff2 binary
+*.ico binary
