@@ -136,7 +136,7 @@ export function InstrumentBar({ session, live }: { session: SessionState; live: 
       <div className="flex h-[56px] items-center gap-5 px-5 md:gap-[40px] md:px-[35px]">
         <Link
           href="/"
-          className="font-graphik whitespace-nowrap text-[15px] leading-[21px] text-white sm:text-[17px]"
+          className="font-graphik min-w-0 shrink truncate text-[15px] leading-[21px] text-white sm:text-[17px]"
         >
           BASIS // SPREAD
         </Link>
@@ -165,7 +165,7 @@ export function InstrumentBar({ session, live }: { session: SessionState; live: 
           })}
         </nav>
 
-        <div className="ml-auto flex items-center gap-[12px]">
+        <div className="ml-auto flex shrink-0 items-center gap-[12px]">
           <SessionClock initial={session} />
           <span className="font-manrope hidden text-[12px] text-[#AFDDFF] sm:ml-[8px] sm:inline">
             {live ? '[ LIVE ]' : '[ CAPTURE ]'}
@@ -218,7 +218,7 @@ export function InstrumentBar({ session, live }: { session: SessionState; live: 
             onClick={() => setMenu((v) => !v)}
             aria-expanded={menu}
             aria-controls="bar-menu"
-            className="font-manrope border border-white/20 px-[9px] py-[4px] text-[11px] text-white/70 transition-colors hover:border-white/50 hover:text-white min-[1400px]:hidden"
+            className="font-manrope shrink-0 border border-white/20 px-[9px] py-[4px] text-[11px] text-white/70 transition-colors hover:border-white/50 hover:text-white min-[1400px]:hidden"
           >
             {menu ? 'CLOSE' : 'MENU'}
           </button>

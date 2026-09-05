@@ -10,12 +10,32 @@
    ========================================================================== */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+/*
+ * The page never scrolls sideways. Only the containers that opt into it do — the
+ * readout table, the pool ladder, a docs table, the token strip — and each of those
+ * carries its own `overflow-x: auto`.
+ *
+ * `clip` rather than `hidden` on purpose. `overflow-x: hidden` forces the other axis
+ * to `auto`, which turns the element into a scroll container: it breaks `position:
+ * sticky` inside it and makes the body, rather than the document, the thing that
+ * scrolls. `clip` cuts the overflow without any of that.
+ *
+ * This is a backstop, not a licence. Anything wide enough to be clipped here is a
+ * layout bug and should be fixed at the source — the backstop only guarantees a
+ * reader never has to pan the page to reach the menu.
+ */
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 html { background: #000; scroll-behavior: smooth; }
 /* The instrument bar is fixed at 56px, so an anchored section would otherwise land
    underneath it. Every nav target is addressed by id, so scoping to [id] covers all
    of them without having to remember a class on each one. */
 [id] { scroll-margin-top: 72px; }
-body { background: #000; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+body { background: #000; color: #fff; -webkit-font-smoothing: antialiased; }
 
 :root {
   /* data semantics — these mean something, never decorative */
