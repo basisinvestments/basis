@@ -9,7 +9,7 @@ export function Footer({ asOf }: { asOf: string }) {
       <div className="grid gap-8 md:grid-cols-3">
         <div>
           <span className="lab">Reference</span>
-          <p className="font-data mt-2 text-[11.5px] leading-[20px] text-white/45">
+          <p className="font-data mt-2 break-all text-[11.5px] leading-[20px] text-white/45">
             api.robinhood.com/rhj/prices/&#123;symbol&#125;
             <br />api.robinhood.com/rhj/assets
             <br />api.robinhood.com/rhj/corporate-actions
@@ -17,7 +17,7 @@ export function Footer({ asOf }: { asOf: string }) {
         </div>
         <div>
           <span className="lab">On-chain</span>
-          <p className="font-data mt-2 text-[11.5px] leading-[20px] text-white/45">
+          <p className="font-data mt-2 break-all text-[11.5px] leading-[20px] text-white/45">
             Uniswap v3 · v4 on chain {CHAIN.id}
             <br />api.dexscreener.com/latest/dex/tokens/&#123;address&#125;
             <br />{CHAIN.rpc.replace('https://', '')}
@@ -25,7 +25,7 @@ export function Footer({ asOf }: { asOf: string }) {
         </div>
         <div>
           <span className="lab">Cadence</span>
-          <p className="font-data mt-2 text-[11.5px] leading-[20px] text-white/45">
+          <p className="font-data mt-2 break-all text-[11.5px] leading-[20px] text-white/45">
             Revalidated every 60 seconds
             <br />No history kept between requests
             <br />This render: {dateStampUtc(asOf)}
