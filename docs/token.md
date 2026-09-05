@@ -24,21 +24,32 @@ So the job is written down before the token exists, and the conditions are testa
 
 **Live from block one.**
 
-Every dollar the project earns buys the token off the market and destroys it. 90% to a market
-buy sent to the dead address, 10% keeps the servers on. Weekly, one transaction, public wallet.
+Every dollar the project earns is split in half: one half buys the token off the market and
+sends it to the dead address, the other half funds the treasury in Engine 02. Weekly, one
+transaction, public wallet.
+
+An earlier version sent 90% to the burn and 10% to infrastructure, and separately claimed that
+same 10% seeded the treasury. One slice cannot do two jobs, and at the lower volume tier the
+treasury would have taken four years to arm. A 50/50 split funds both lines from a stated
+number, and infrastructure is paid from the treasury's line and disclosed before profit is
+struck.
 
 Two revenue lines: the creator share of swap fees on the pool, and what launchpads and
 terminals pay to put the premium warning next to their own buy button.
 
-| Pool volume / day | Swap fee 1% | Creator 70% | Buyback 90% | Per month |
-|---|---|---|---|---|
-| $50,000 | $500 | $350 | $315 | $9,450 |
-| $250,000 | $2,500 | $1,750 | $1,575 | $47,250 |
-| $1,000,000 | $10,000 | $7,000 | $6,300 | $189,000 |
+| Pool volume / day | Swap fee 1% | Creator 70% | To the burn | To the treasury | Each, per month |
+|---|---|---|---|---|---|
+| $50,000 | $500 | $350 | $175 | $175 | $5,250 |
+| $250,000 | $2,500 | $1,750 | $875 | $875 | $26,250 |
+| $1,000,000 | $10,000 | $7,000 | $3,500 | $3,500 | $105,000 |
 
-Fee mechanics are the launchpad's, not ours. Published rules: 90/10 split · weekly cadence,
-claim and burn in one transaction · creator wallet public · burn counter reads the chain, not
-our database.
+Arithmetic on a 1% swap fee and a 70% creator share, on a 30-day month. **Fee mechanics are the
+launchpad's, not ours**, and none of this is verified against a live pool because none exists.
+This is what the project would earn at those volumes — not a yield, not a distribution, and not
+a forecast of the volume or of the token.
+
+Published rules: 50/50 split · weekly cadence, claim and burn in one transaction · creator
+wallet public · burn counter reads the chain, not our database.
 
 ---
 
@@ -59,14 +70,26 @@ Three trades, all visible in the readout:
 - **Corporate-action windows.** The oracle pauses; the pools do not. The multiplier is known in
   advance and the pools misprice it anyway.
 
-Seeded by 10% of Engine 01 until it reaches $50,000. After that, profits split half compounding
-and half to Engine 01. **Losses stay inside the treasury** — Engine 01 never pauses to cover
-them.
+**Funded by half of Engine 01, permanently** — not only until it arms. Trading begins once the
+balance reaches $50,000; below that the engine accumulates and does not trade. Trading profits
+split half compounding and half to the burn. **Losses stay inside the treasury** — the burn
+never pauses to cover them.
+
+How long the threshold takes, on the same arithmetic as the table above:
+
+| Pool volume / day | To the treasury, per month | Reaches $50,000 in |
+|---|---|---|
+| $50,000 | $5,250 | ~10 months |
+| $250,000 | $26,250 | ~2 months |
+| $1,000,000 | $105,000 | ~2 weeks |
+
+At low volume this is a slow engine, and saying so is more useful than a threshold that reads
+like a near-term milestone. It arms when it arms, and the balance is public throughout.
 
 **Published mandate:** canonical Stock Tokens and USDG only, never launchpad tokens · maximum
 5% of the shallower pool's liquidity per position · maximum 20% of the treasury in one token ·
-no leverage, no borrowing, no perps · treasury address public · monthly P&L with transaction
-links.
+no leverage, no borrowing, no perps · infrastructure costs paid from this line and itemised
+before profit is struck · treasury address public · monthly P&L with transaction links.
 
 ### The conflict, and the rule that resolves it
 

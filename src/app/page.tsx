@@ -315,7 +315,7 @@ ranked on trade  -28 bps  TIGHT`}</pre>
               status="Live from block one"
               statusFlag="TIGHT"
               rules={[
-                'SPLIT 90% market buy to the dead address · 10% servers',
+                'SPLIT 50% market buy to the dead address · 50% to the treasury',
                 'CADENCE weekly, one transaction',
                 'SOURCE·1 creator share of the pool swap fee',
                 'SOURCE·2 integrator licences, paid in USDG',
@@ -327,20 +327,21 @@ ranked on trade  -28 bps  TIGHT`}</pre>
                   <span className="lab">What the project earns · not a holder return</span>
                   <div className="font-data mt-3 grid max-w-[420px] grid-cols-[1fr_auto_auto] gap-x-5 gap-y-[6px] text-[11.5px]">
                     <span className="text-white/35">Pool volume / day</span>
-                    <span className="text-right text-white/35">To the buyback</span>
-                    <span className="text-right text-white/35">Per month</span>
+                    <span className="text-right text-white/35">Each line / day</span>
+                    <span className="text-right text-white/35">Each line / month</span>
                     <span className="text-white/60">$50,000</span>
-                    <span className="text-right text-white/60">$315</span>
-                    <span className="text-right text-white/60">$9,450</span>
+                    <span className="text-right text-white/60">$175</span>
+                    <span className="text-right text-white/60">$5,250</span>
                     <span className="text-white/60">$250,000</span>
-                    <span className="text-right text-white/60">$1,575</span>
-                    <span className="text-right text-white/60">$47,250</span>
+                    <span className="text-right text-white/60">$875</span>
+                    <span className="text-right text-white/60">$26,250</span>
                     <span className="text-white/60">$1,000,000</span>
-                    <span className="text-right text-white/60">$6,300</span>
-                    <span className="text-right text-white/60">$189,000</span>
+                    <span className="text-right text-white/60">$3,500</span>
+                    <span className="text-right text-white/60">$105,000</span>
                   </div>
                   <p className="font-manrope mt-3 max-w-[68ch] text-[12px] leading-[19px] text-white/40">
-                    Arithmetic on a 1% swap fee, a 70% creator share and the 90/10 split — the
+                    The burn and the treasury each take half, so both columns apply to each line.
+                    Arithmetic on a 1% swap fee, a 70% creator share and a 30-day month — the
                     launchpad&apos;s fee mechanics, not ours, and unverified against a live pool because
                     none exists. This is what the project would earn at those volumes. It is not a yield,
                     not a distribution, and not a forecast of the volume or of the token.
@@ -349,7 +350,8 @@ ranked on trade  -28 bps  TIGHT`}</pre>
               }
             >
               <b className="font-medium text-white">
-                Every dollar the project earns buys the token off the market and destroys it.
+                Every dollar the project earns is split in half — one half buys the token off the
+                market and destroys it, the other funds the treasury.
               </b>{' '}
               Two sources: the creator share of the pool&apos;s swap fees, and what launchpads pay to put
               the premium warning beside their own buy button.
@@ -361,13 +363,15 @@ ranked on trade  -28 bps  TIGHT`}</pre>
               status="Arms at $50k"
               statusFlag="WATCH"
               rules={[
-                'SEED 10% of Engine 01 until it reaches $50,000',
+                'FUNDING half of Engine 01, permanently',
+                'ARMS trading starts at $50,000 · ~10 months at $50k daily volume',
                 'ASSETS canonical Stock Tokens + USDG only',
                 'SIZE at most 5% of the shallower pool',
                 'EXPOSURE at most 20% per token',
                 'LEVERAGE none · no borrowing, no perps',
                 'PROFIT 50% compounds · 50% burns',
-                'LOSS stays inside the treasury',
+                'LOSS stays inside the treasury · the burn never covers it',
+                'COSTS infrastructure paid from this line, itemised first',
                 'PROOF address public · monthly P&L with tx links',
                 'REVIEW pooled capital managed for profit — first item for legal review before it arms',
               ]}
