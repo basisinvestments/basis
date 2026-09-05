@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CHAIN } from '@/lib/registry';
+import { EXTERNAL } from '@/lib/links';
 import { dateStampUtc } from '@/lib/format';
 
 export function Footer({ asOf }: { asOf: string }) {
@@ -42,6 +43,18 @@ export function Footer({ asOf }: { asOf: string }) {
         <a className="font-manrope text-[12px] text-white/60 hover:text-[#AFDDFF]" href="/api/v1/basis">API</a>
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a className="font-manrope text-[12px] text-white/60 hover:text-[#AFDDFF]" href="/api/v1/status">Status</a>
+        {EXTERNAL.map((l) => (
+          <a
+            key={l.href}
+            className="font-manrope text-[12px] text-white/60 hover:text-[#AFDDFF]"
+            href={l.href}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            {l.long}
+            <span aria-hidden="true" className="ml-[3px] text-[10px] text-white/35">&#8599;</span>
+          </a>
+        ))}
         <span className="font-manrope text-[12px] text-white/60">{CHAIN.name} · id {CHAIN.id}</span>
       </div>
 

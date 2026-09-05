@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { SessionClock } from './SessionClock';
+import { EXTERNAL } from '@/lib/links';
 import type { SessionState } from '@/lib/types';
 
 /**
@@ -55,7 +56,7 @@ const PAGES = [
 ] as const;
 
 /** Sentence case for the menu, except where the label is an acronym. */
-const PROPER: Record<string, string> = { API: 'API' };
+const PROPER: Record<string, string> = { API: 'API', GITHUB: 'GitHub', X: 'X' };
 const title = (s: string) => PROPER[s] ?? s.charAt(0) + s.slice(1).toLowerCase();
 
 /** Home matches only itself; every other page also owns its subpaths, so DOCS stays
@@ -140,7 +141,7 @@ export function InstrumentBar({ session, live }: { session: SessionState; live: 
           BASIS // SPREAD
         </Link>
 
-        <nav className="hidden items-center gap-[26px] lg:flex">
+        <nav className="hidden items-center gap-[26px] min-[1400px]:flex">
           {sections.map(([n, label, id]) => {
             const on = active === id;
             return (
@@ -190,6 +191,26 @@ export function InstrumentBar({ session, live }: { session: SessionState; live: 
                 </Link>
               );
             })}
+            <span className="h-3 w-px bg-white/15" aria-hidden="true" />
+
+            {/* Outbound. The arrow is the only mark that distinguishes these from the
+                page links beside them — this interface has no decorative icons and a
+                brand logo would be the first. */}
+            {EXTERNAL.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="font-manrope border-b border-transparent pb-[2px] text-[12px] text-white/60 transition-colors hover:text-[#AFDDFF]"
+              >
+                {l.label}
+                <span aria-hidden="true" className="ml-[3px] text-[10px] text-white/35">
+                  &#8599;
+                </span>
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            ))}
           </nav>
 
           <button
@@ -197,7 +218,7 @@ export function InstrumentBar({ session, live }: { session: SessionState; live: 
             onClick={() => setMenu((v) => !v)}
             aria-expanded={menu}
             aria-controls="bar-menu"
-            className="font-manrope border border-white/20 px-[9px] py-[4px] text-[11px] text-white/70 transition-colors hover:border-white/50 hover:text-white lg:hidden"
+            className="font-manrope border border-white/20 px-[9px] py-[4px] text-[11px] text-white/70 transition-colors hover:border-white/50 hover:text-white min-[1400px]:hidden"
           >
             {menu ? 'CLOSE' : 'MENU'}
           </button>
@@ -207,10 +228,10 @@ export function InstrumentBar({ session, live }: { session: SessionState; live: 
       {menu ? (
         <div
           id="bar-menu"
-          className="max-h-[70svh] overflow-y-auto border-t border-white/10 bg-black px-5 py-4 lg:hidden"
+          className="max-h-[70svh] overflow-y-auto border-t border-white/10 bg-black px-5 py-4 min-[1400px]:hidden"
         >
-          <span className="lab">Pages</span>
-          <div className="mt-3 flex flex-col">
+          <span className="lab lg:hidden">Pages</span>
+          <div className="mt-3 flex flex-col lg:hidden">
             {PAGES.map(([href, label]) => {
               const on = isCurrent(pathname, href);
               return (
@@ -228,9 +249,25 @@ export function InstrumentBar({ session, live }: { session: SessionState; live: 
             })}
           </div>
 
+          <span className="lab mt-6 block lg:hidden">Elsewhere</span>
+          <div className="mt-3 flex flex-col lg:hidden">
+            {EXTERNAL.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="font-manrope flex items-center justify-between border-b border-white/[0.06] py-[10px] text-[14px] text-white/75"
+              >
+                {title(l.label)}
+                <span aria-hidden="true" className="text-[11px] text-white/35">&#8599;</span>
+              </a>
+            ))}
+          </div>
+
           {sections.length ? (
             <>
-              <span className="lab mt-6 block">On this page</span>
+              <span className="lab mt-6 block lg:mt-0">On this page</span>
               <div className="mt-3 flex flex-col">
                 {sections.map(([n, label, id]) => (
                   <a
