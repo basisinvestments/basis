@@ -255,7 +255,22 @@ export function resolvePath(obj: unknown, path: string): unknown {
 
 /** Configured means an API key is present. The desk works fine without one. */
 export function interpreterConfigured(): boolean {
-  return Boolean(process.env.INTERPRETER_API_KEY && process.env.INTERPRETER_MODEL);
+  const c = interpreterConfig();
+  return c.key && c.endpoint && c.model;
+}
+
+/**
+ * Which pieces of the interpreter's configuration are present — booleans only, never
+ * values. A deployment that has two of the three needs to know which one is missing,
+ * and guessing at it from a 503 is worse than reporting it. Nothing here can leak a
+ * secret: the answer is three yes-or-nos.
+ */
+export function interpreterConfig(): { key: boolean; endpoint: boolean; model: boolean } {
+  return {
+    key: Boolean(process.env.INTERPRETER_API_KEY),
+    endpoint: Boolean(process.env.INTERPRETER_ENDPOINT),
+    model: Boolean(process.env.INTERPRETER_MODEL),
+  };
 }
 
 /** Swappable without a code change — the grounding contract is provider-agnostic. */
