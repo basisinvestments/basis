@@ -124,6 +124,40 @@ A feed claiming perfect uptime is a feed you should not read. This one reports i
 
 ---
 
+## Treasury
+
+### `GET /v1/treasury`
+
+The treasury's balance from chain, what the published mandate would do with the current readings,
+and the ledger of what it has seen. `?tail=N` (default 120, max 1440) sets how many minutes of
+ledger come back.
+
+```json
+{
+  "asOf": "2026-09-12T23:48:11.402Z",
+  "session": "closed",
+  "balance": { "configured": false, "reason": "No treasury wallet is configured on this deployment. …" },
+  "armThresholdUsd": 50000,
+  "simulated": {
+    "label": "SIMULATED — signals at quoted prices under the published mandate. No capital deployed, no fill, not executable size.",
+    "notionalUsd": 50000,
+    "notionalIsReal": false,
+    "feeAssumptionBpsPerLeg": 30,
+    "now": [ { "symbol": "MSTR", "signal": { "kind": "pool-to-pool", "spreadBps": 108.4, "sizeUsd": 208, "netUsd": 1.01, "buy": { … }, "sell": { … } }, "reason": null },
+             { "symbol": "NVDA", "signal": null, "reason": "Spread 12 bps does not clear the assumed 60 bps round trip." } ],
+    "recordedThisMinute": true
+  },
+  "ledger": { "entries": 1, "since": "2026-09-12T23:48", "storage": "netlify", "tail": [ … ] }
+}
+```
+
+When a wallet is configured, `balance` carries `address`, `usdg`, `eth`, `usd`, `block`, `readAt`
+and an explorer link — every field a reader needs to confirm the figure themselves. Every call
+records the current minute into the ledger, idempotently; `storage` says whether that record is
+durable (`netlify`) or local memory. `Cache-Control: no-store`.
+
+Nothing under `simulated` is a fill. The response says so in its own shape.
+
 ## Errors
 
 | Code | Meaning |

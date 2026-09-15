@@ -303,9 +303,11 @@ ranked on trade  -28 bps  TIGHT`}</pre>
           </div>
 
           <p className="lab mt-3">
-            The launchpad&apos;s locker holds the pool and there is no withdraw function to call · no
-            pre-mine and no team allocation is structurally possible · the only way the creator holds
-            tokens is a disclosed buy at launch price
+            The launchpad&apos;s locker holds the pool and there is no withdraw function to call — read
+            from the locker&apos;s bytecode, not its docs · no pre-mine and no team allocation is
+            structurally possible · the only way the creator holds tokens is a disclosed buy at launch
+            price · the launchpad itself is unaudited, and until the pool exists the launch sits on a
+            curve its operator can act on — inherited risk, stated here
           </p>
 
           <div className="mt-5 grid items-start gap-3 lg:grid-cols-3">
@@ -340,11 +342,14 @@ ranked on trade  -28 bps  TIGHT`}</pre>
                     <span className="text-right text-white/60">$105,000</span>
                   </div>
                   <p className="font-manrope mt-3 max-w-[68ch] text-[12px] leading-[19px] text-white/40">
-                    The burn and the treasury each take half, so both columns apply to each line.
-                    Arithmetic on a 1% swap fee, a 70% creator share and a 30-day month — the
-                    launchpad&apos;s fee mechanics, not ours, and unverified against a live pool because
-                    none exists. This is what the project would earn at those volumes. It is not a yield,
-                    not a distribution, and not a forecast of the volume or of the token.
+                    The floor: a 0% creator tax, so the creator&apos;s take is 70% of the venue&apos;s
+                    1% base fee — 0.7% of volume — split in half, each column to each line, on a
+                    30-day month. The venue also lets the creator set a tax of up to 10% of volume on
+                    top; each point adds 1% to the take and 1% to what a trader pays. Both read on a
+                    mainnet fork of the live contracts. The launchpad&apos;s fee mechanics, not ours,
+                    and unverified against a live pool for this token because none exists. What the
+                    project would earn at those volumes — not a yield, not a distribution, not a
+                    forecast of the volume or of the token.
                   </p>
                 </div>
               }

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getReadings } from '@/lib/readings';
 import { CAPTURE_ISO } from '@/lib/fallback';
 import { interpreterConfig, interpreterConfigured } from '@/lib/interpret';
+import { treasuryAddress } from '@/lib/sources/treasury';
 
 /**
  * GET /v1/status — upstream health and how much of the current response is live.
@@ -28,6 +29,8 @@ export async function GET() {
       // Presence, never values. The interpreter is optional; when it is off, this
       // says which of its three settings the deployment is missing.
       interpreter: { configured: interpreterConfigured(), present: interpreterConfig() },
+      // An address, not a secret — but reported as presence for symmetry.
+      treasury: { walletConfigured: treasuryAddress() !== null },
     },
     { headers: { 'Cache-Control': 'no-store' } },
   );

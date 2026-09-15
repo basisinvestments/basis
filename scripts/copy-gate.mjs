@@ -144,6 +144,27 @@ for (const { path, text } of everything) {
   });
 }
 
+// --- The ledger is simulated, and the surfaces that show it must say so ----------
+//
+// The label is defined once, in the assembler, and the page renders it by reference.
+// Two checks: the constant still says what it must, and the page still uses it. A
+// page that stopped rendering `sim.label` would show trades with no disclaimer, and
+// that is the one place a missing word is a build failure.
+{
+  const assemble = everything.find((f) => f.path.endsWith('treasury-assemble.ts'));
+  if (!assemble) {
+    failures.push('src/lib/treasury-assemble.ts is missing.');
+  } else {
+    if (!/SIMULATED_LABEL\s*=/.test(assemble.text)) failures.push(`${assemble.path} — SIMULATED_LABEL is no longer defined.`);
+    if (!/No capital deployed/.test(assemble.text)) failures.push(`${assemble.path} — the label has lost its "no capital deployed" clause.`);
+    if (!/not executable size/.test(assemble.text)) failures.push(`${assemble.path} — the label has lost its "not executable size" clause.`);
+  }
+  const page = everything.find((f) => f.path.includes('treasury') && f.path.endsWith('page.tsx'));
+  if (page && !/sim\.label|SIMULATED_LABEL/.test(page.text)) {
+    failures.push(`${page.path} — renders treasury signals without rendering the simulated label.`);
+  }
+}
+
 // --- Report -------------------------------------------------------------------
 
 if (failures.length) {

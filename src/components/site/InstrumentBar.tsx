@@ -38,6 +38,7 @@ const SECTIONS: Record<string, readonly Section[]> = {
   // A document page (/docs/<slug>) is intentionally absent: it builds its own contents
   // rail from the markdown headings, which the bar cannot know statically. The `?? []`
   // fallback gives it no numbered nav, which is correct.
+  '/treasury': [],
   '/system': [
     ['01', 'COLOUR', 'y-colour'],
     ['02', 'FLAGS', 'y-flags'],
@@ -51,6 +52,7 @@ const PAGES = [
   // two entries reading READOUT in one bar is a collision, not a shorthand.
   ['/', 'HOME'],
   ['/desk', 'DESK'],
+  ['/treasury', 'TREASURY'],
   ['/docs', 'DOCS'],
   ['/system', 'SYSTEM'],
 ] as const;

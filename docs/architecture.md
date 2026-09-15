@@ -72,6 +72,22 @@ flash the wrong reference colour on hydration.
 Eastern time comes from `Intl.DateTimeFormat` with a `timeZone`, not a fixed UTC offset, so
 daylight saving is the platform's problem rather than ours.
 
+## Persistence, and the scheduled tick
+
+`src/lib/store.ts` is the first thing in the project that remembers anything between requests.
+On the host it is Netlify Blobs — a key-value store that exists on every site with no
+provisioning; locally it is a `Map`, and the API says which (`storage: "memory"`) so a local run
+is never mistaken for a record. It holds the treasury ledger, keyed by minute, and is written
+idempotently so a minute recorded twice is one entry.
+
+`netlify/functions/ledger-tick.mts` runs once a minute and calls `/api/v1/treasury`, which does
+the recording. The function does nothing itself — one code path, the site's own assembler, so
+the scheduled record and a visitor's read can never disagree.
+
+`src/lib/sources/treasury.ts` reads the treasury wallet over the public RPC: `eth_getBalance`
+and an ERC-20 `balanceOf`, batched in one call, block-stamped. It holds no key. It is `server-only`
+for the same reason `rhj.ts` is.
+
 ## Design system as code
 
 `app/globals.css` holds the tokens as CSS custom properties, the eight motion keyframes, and

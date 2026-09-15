@@ -37,16 +37,29 @@ struck.
 Two revenue lines: the creator share of swap fees on the pool, and what launchpads and
 terminals pay to put the premium warning next to their own buy button.
 
-| Pool volume / day | Swap fee 1% | Creator 70% | To the burn | To the treasury | Each, per month |
+The venue pays the creator two things on every trade: **70% of its 1% base fee**, and a
+**creator tax the creator sets at launch, 0–10% of volume**, on top. Both were read on a mainnet
+fork of the venue's live contracts on 2026-09-12: a 500 USDG buy at a 2% setting accrued 10 USDG of
+tax on the curve, and 800 USDG of buys swept 24 USDG to the escrow of which 21.6 went to the
+creator — the tax plus 70% of the base. The creator's take is therefore **the tax plus 0.7% of
+volume**. A trader pays the base fee plus the tax.
+
+**The floor — a 0% tax, 0.7% of volume — split in half, on a 30-day month:**
+
+| Pool volume / day | Base fee 1% | Creator 70% of it | To the burn | To the treasury | Each, per month |
 |---|---|---|---|---|---|
 | $50,000 | $500 | $350 | $175 | $175 | $5,250 |
 | $250,000 | $2,500 | $1,750 | $875 | $875 | $26,250 |
 | $1,000,000 | $10,000 | $7,000 | $3,500 | $3,500 | $105,000 |
 
-Arithmetic on a 1% swap fee and a 70% creator share, on a 30-day month. **Fee mechanics are the
-launchpad's, not ours**, and none of this is verified against a live pool because none exists.
-This is what the project would earn at those volumes — not a yield, not a distribution, and not
-a forecast of the volume or of the token.
+**Each point of creator tax adds 1% of volume to the creator's take — and to the trader's cost.**
+At a 2% tax the take is 2.7% and each line receives $20,250 a month at the lowest tier; at 5% it
+is 5.7% and $42,750, and a trader pays 6% to go round. The tax is a dial with both hands on it.
+It is set once, at launch, and published here when it is.
+
+**Fee mechanics are the launchpad's, not ours**, and none of this is verified against a live pool
+for this token because none exists. This is what the project would earn at those volumes — not a
+yield, not a distribution, and not a forecast of the volume or of the token.
 
 Published rules: 50/50 split · weekly cadence, claim and burn in one transaction · creator
 wallet public · burn counter reads the chain, not our database.
@@ -75,21 +88,54 @@ balance reaches $50,000; below that the engine accumulates and does not trade. T
 split half compounding and half to the burn. **Losses stay inside the treasury** — the burn
 never pauses to cover them.
 
-How long the threshold takes, on the same arithmetic as the table above:
+How long the threshold takes, at the floor and at a 2% creator tax:
 
-| Pool volume / day | To the treasury, per month | Reaches $50,000 in |
+| Pool volume / day | At the floor (0% tax) | At a 2% tax |
 |---|---|---|
-| $50,000 | $5,250 | ~10 months |
-| $250,000 | $26,250 | ~2 months |
-| $1,000,000 | $105,000 | ~2 weeks |
+| $50,000 | $5,250 / mo · ~10 months | $20,250 / mo · ~2.5 months |
+| $250,000 | $26,250 / mo · ~2 months | $101,250 / mo · ~15 days |
+| $1,000,000 | $105,000 / mo · ~2 weeks | $405,000 / mo · ~4 days |
 
-At low volume this is a slow engine, and saying so is more useful than a threshold that reads
-like a near-term milestone. It arms when it arms, and the balance is public throughout.
+At the floor and low volume this is a slow engine, and saying so is more useful than a threshold
+that reads like a near-term milestone. It arms when it arms, and the balance is public throughout
+at `/treasury`, read from the chain.
 
 **Published mandate:** canonical Stock Tokens and USDG only, never launchpad tokens · maximum
 5% of the shallower pool's liquidity per position · maximum 20% of the treasury in one token ·
 no leverage, no borrowing, no perps · infrastructure costs paid from this line and itemised
 before profit is struck · treasury address public · monthly P&L with transaction links.
+
+### The ledger — the treasury before it has traded
+
+`/treasury` shows three things from the day the token exists, each with its provenance:
+
+- **The balance, read from the wallet on chain.** `eth_getBalance` and an ERC-20 `balanceOf` for
+  USDG, over the public RPC, with the block and the time of the read stamped beside it. When no
+  wallet is configured the page says so and shows a dash. It never shows a placeholder figure —
+  a balance the site displays has to be one anyone can confirm on the explorer.
+- **What the mandate would do right now.** The published rules above, applied as code
+  (`src/lib/treasury.ts`) to the readings on screen: buy the cheapest live pool, sell the
+  dearest, sized at 5 % of the shallower pool or 20 % of the treasury, whichever binds, with a
+  30 bps-a-leg fee assumption shown beside every net figure because the pool tier is not in the
+  index data. Before the treasury is funded the signals are sized against the $50,000 threshold
+  — *what it would do once armed* — and the page says so.
+- **A ledger, one row a minute,** of what the mandate saw. Recorded on every read of
+  `/api/v1/treasury` and by a scheduled function once a minute so the record fills whether or
+  not anyone is watching.
+
+**Every figure under the ledger is simulated and labelled so** — a signal at quoted prices, not
+a fill, not executable size. The label is defined once and the build fails if the page stops
+rendering it. Only pool-to-pool is simulated in this pass; weekend reversion and corporate-action
+windows need a position held across time and are recorded as not yet simulated rather than
+approximated.
+
+What the ledger is *for*: before anyone trusts real capital to the mandate, it shows whether the
+instrument finds gaps that clear the fees — and how often the answer is *nothing*. On a closed
+Saturday the honest reading is two small signals and ten quiet tokens, and the page says why each
+is quiet. That is the demonstration, and it is the opposite of a demo.
+
+When the treasury trades, the fills are read from chain and shown beside the reading they were
+published from, so the ordering below is checkable.
 
 ### The conflict, and the rule that resolves it
 
@@ -134,9 +180,16 @@ where that gets recorded.
 ## Supply
 
 Fixed 1,000,000,000, no mint function. 100% into the pool at launch, locked permanently by the
-launchpad's locker — there is no withdraw function to call. No pre-mine and no team allocation
-is structurally possible; the only way the creator holds tokens is a disclosed developer buy at
-launch price.
+launchpad's locker — there is no withdraw function to call, and that is read from the locker's
+bytecode (fourteen selectors, none of them an exit), not from its documentation. No pre-mine and
+no team allocation is structurally possible; the only way the creator holds tokens is a disclosed
+developer buy at launch price.
+
+**Inherited, and stated.** The launchpad is unaudited. Between launch and graduation the token
+sits on a bonding curve its operator holds powers over — it can force a graduation, and can move
+a swept-but-unpooled launch after seven days. Those powers end when the pool is created: the token
+contract has no owner, no mint, no pause and no fee setter, and the locker has no way out. On every
+launch this project has watched, the curve phase lasted between fourteen seconds and three hours.
 
 Holders also get the feed without the 60-second delay, threshold alerts and history exports.
 That is a perk, not the reason.

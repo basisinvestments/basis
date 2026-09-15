@@ -19,7 +19,7 @@ system as CSS custom properties with `/system` rendering the real components.
 |---|---|---|
 | **v0.2** | Port the full `/docs` and `/system` pages from the written reference into React. | — |
 | **v0.3** | All 194 tokens rather than the tracked 12; registry generated from `/rhj/assets` with our own addresses as the authority. | v0.2 stable |
-| **v0.4** | Persistence: a store behind `/v1/history/{symbol}`, hash-chained samples, the gap log, and `/v1/status` reporting real uptime instead of the current request. | a host with a database |
+| **v0.4** | Persistence: a store behind `/v1/history/{symbol}`, hash-chained samples, the gap log, and `/v1/status` reporting real uptime instead of the current request. **Partly answered 2026-09-12:** the host has a key-value store, and the treasury ledger is the first thing in the project that remembers anything between requests (`src/lib/store.ts`). The readings history, the hash chain and the gap log are the same shape and can move onto it. | ~~a host with a database~~ a scheduled tick and the same store |
 | **v0.5** | Alerts and webhooks. The session filter is the useful part — `"session": "closed"` only fires in the frozen window. | v0.4 |
 | **v0.6** | The weekend board, posted publicly each Friday and settled each Monday. This is the track record, and it costs nothing but consistency. | v0.4 |
 | **v1** | The embeddable risk badge. This is the distribution play: a launchpad quoting new tokens against Stock Tokens inherits the premium problem and has an obvious reason to display the warning. | a first integrator |

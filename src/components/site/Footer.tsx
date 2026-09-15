@@ -35,6 +35,7 @@ export function Footer({ asOf }: { asOf: string }) {
 
       <div className="rule mt-8 flex flex-wrap gap-x-8 gap-y-2 pt-6">
         <Link className="font-manrope text-[12px] text-white/60 hover:text-[#AFDDFF]" href="/desk">Desk</Link>
+        <Link className="font-manrope text-[12px] text-white/60 hover:text-[#AFDDFF]" href="/treasury">Treasury</Link>
         <Link className="font-manrope text-[12px] text-white/60 hover:text-[#AFDDFF]" href="/docs">Documentation</Link>
         <Link className="font-manrope text-[12px] text-white/60 hover:text-[#AFDDFF]" href="/system">Design system</Link>
         {/* Plain anchors: these are JSON endpoints, not pages. A client-side route

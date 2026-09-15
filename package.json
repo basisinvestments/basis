@@ -15,6 +15,7 @@
     "gate": "node scripts/copy-gate.mjs"
   },
   "dependencies": {
+    "@netlify/blobs": "^11.0.3",
     "clsx": "^2.1.1",
     "next": "^15.5.3",
     "react": "^18.3.1",
@@ -24,6 +25,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@netlify/functions": "^6.0.0",
     "@types/node": "^22.10.2",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
